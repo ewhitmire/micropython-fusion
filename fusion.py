@@ -6,7 +6,7 @@
 # V0.5 angles method replaced by heading pitch and roll properties
 # V0.4 calibrate method added
 
-import time
+from time import time
 from math import sqrt, atan2, asin, degrees, radians
 """
 Supports 6 and 9 degrees of freedom sensors. Tested with InvenSense MPU-9150 9DOF sensor.
@@ -68,7 +68,7 @@ class Fusion(object):
         ax, ay, az = accel                  # Units G (but later normalised)
         gx, gy, gz = (radians(x) for x in gyro) # Units deg/s
         if self.start_time is None:
-            self.start_time = time.ticks_ms()  # First run
+            self.start_time = time()  # First run
         q1, q2, q3, q4 = (self.q[x] for x in range(4))   # short name local variable for readability
         # Auxiliary variables to avoid repeated arithmetic
         _2q1 = 2 * q1
@@ -112,8 +112,8 @@ class Fusion(object):
         qDot4 = 0.5 * (q1 * gz + q2 * gy - q3 * gx) - self.beta * s4
 
         # Integrate to yield quaternion
-        deltat = (time.ticks_ms() - self.start_time) / 1000     # calculate the elapsed time
-        self.start_time = time.ticks_ms()
+        deltat = (time() - self.start_time)     # calculate the elapsed time
+        self.start_time = time()
         q1 += qDot1 * deltat
         q2 += qDot2 * deltat
         q3 += qDot3 * deltat
@@ -126,7 +126,7 @@ class Fusion(object):
         ax, ay, az = accel                  # Units irrelevant (normalised)
         gx, gy, gz = (radians(x) for x in gyro)  # Units deg/s
         if self.start_time is None:
-            self.start_time = time.ticks_ms()  # First run
+            self.start_time = time()  # First run
         q1, q2, q3, q4 = (self.q[x] for x in range(4))   # short name local variable for readability
         # Auxiliary variables to avoid repeated arithmetic
         _2q1 = 2 * q1
@@ -207,8 +207,8 @@ class Fusion(object):
         qDot4 = 0.5 * (q1 * gz + q2 * gy - q3 * gx) - self.beta * s4
 
         # Integrate to yield quaternion
-        deltat = (time.ticks_ms() - self.start_time) / 1000     # calculate the elapsed time
-        self.start_time = time.ticks_ms()
+        deltat = (time() - self.start_time)     # calculate the elapsed time
+        self.start_time = time()
         q1 += qDot1 * deltat
         q2 += qDot2 * deltat
         q3 += qDot3 * deltat

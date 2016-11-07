@@ -3,15 +3,13 @@
 # coauthor: Peter Hinch
 # V0.7 25th June 2015 Adapted for new MPU9x50 interface
 
-from machine import I2C, Pin
 import time
 from mpu9250 import MPU9250
 from fusion import Fusion
 
 #sw_pin = Pin(Pin.exp_board.G17, mode=Pin.IN, pull=Pin.PULL_UP)
 
-i2c = I2C(0, I2C.MASTER, baudrate=400000)
-imu = MPU9250(i2c)
+imu = MPU9250()
 
 fuse = Fusion()
 
@@ -44,16 +42,16 @@ def switch():
 
 if Calibrate:
     print("Calibrating. Press switch when done.")
-    fuse.calibrate(getmag, switch, lambda: time.sleep_ms(100))
+    fuse.calibrate(getmag, switch, lambda: time.sleep(0.1))
     print(fuse.magbias)
 
 if Timing:
     mag = imu.mag.xyz  # Don't include blocking read in time
     accel = imu.accel.xyz  # or i2c
     gyro = imu.gyro.xyz
-    start = time.ticks_ms()
+    start = time.time()
     fuse.update(accel, gyro, mag) # 1.65mS on Pyboard
-    t = time.ticks_ms() - start
+    t = time.time() - start
     print("Update time (uS):", t)
 
 count = 0
@@ -61,5 +59,5 @@ while True:
     fuse.update(imu.accel.xyz, imu.gyro.xyz, imu.mag.xyz) # Note blocking mag read
     if count % 50 == 0:
         print("Heading, Pitch, Roll: {:7.3f} {:7.3f} {:7.3f}".format(fuse.heading, fuse.pitch, fuse.roll))
-    time.sleep_ms(20)
+    time.sleep(0.02)
     count += 1
