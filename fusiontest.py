@@ -17,9 +17,9 @@ fuse = Fusion()
 
 # Choose test to run
 Calibrate = True
-Timing = False
+Timing = True
 
-time_calibration = time.time() + 20
+time_calibration = time.time() + 10
 
 def getmag():
     """
