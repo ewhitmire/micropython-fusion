@@ -52,7 +52,7 @@ if Timing:
     start = time.time()
     fuse.update(accel, gyro, mag) # 1.65mS on Pyboard
     t = time.time() - start
-    print("Update time (uS):", t)
+    print("Update time (sec):", t)
 
 count = 0
 while True:
