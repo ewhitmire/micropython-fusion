@@ -8,6 +8,7 @@
 
 import time
 from math import sqrt, atan2, asin, degrees, radians
+import math
 
 import numpy as np
 
@@ -48,16 +49,16 @@ class Fusion(object):
         self.w_by_ = 0
         self.w_bz_ = 0
 
-
-
-
     def calibrate(self, getxyz, stopfunc, waitfunc = None):
-        self.magmax = list(getxyz())             # Initialise max and min lists with current values
-        self.magmin = self.magmax[:]
+        self.magmax = [-math.inf, -math.inf, -math.inf]
+        self.magmin = [math.inf, math.inf, math.inf]
         while not stopfunc():
             if waitfunc is not None:
                 waitfunc()
-            magxyz = tuple(getxyz())
+            xyz = getxyz()
+            if xyz is None:
+                continue
+            magxyz = tuple(xyz)
             for x in range(3):
                 self.magmax[x] = max(self.magmax[x], magxyz[x])
                 self.magmin[x] = min(self.magmin[x], magxyz[x])
